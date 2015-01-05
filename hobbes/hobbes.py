@@ -31,7 +31,7 @@ class Hobbes(object):
     #PROJECTS
     PROJECTS = _PATH_TO_PROJECT
     
-    def __init__(self, verbose = False):
+    def __init__(self, verbose = True):
         '''
             Init of the class.
             Here we set the main variables we'll need to access
@@ -61,5 +61,17 @@ class Hobbes(object):
                 projects.append(project)
         return projects
 
+    def loadFile(self, file):
+        '''
+            LoadFile : 
+                Will try to lad the file given in param.
+        '''
+        if inNuke:
+            print 'yeah'
+        elif inMaya:
+            self._print('Nope')
+        else:
+            self._print('You must launch the tool from Nuke or Maya')
+
 h = Hobbes()
-print h.getListProjects()
+h.loadFile()
