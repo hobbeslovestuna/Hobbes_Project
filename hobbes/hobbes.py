@@ -28,7 +28,7 @@ class Hobbes(object):
     '''
         The Main class for loading assets, saving and versionning files
     '''
-
+    #PROJECTS
     PROJECTS = _PATH_TO_PROJECT
     
     def __init__(self, verbose = False):
@@ -37,7 +37,7 @@ class Hobbes(object):
             Here we set the main variables we'll need to access
         '''
         
-        self._pathProject = PROJECTS
+        # self._pathProject = self.PROJECTS
         self.verbose = verbose
     
     
@@ -53,9 +53,13 @@ class Hobbes(object):
             Getting allr the projects in the folder, to help build the UI and to load assets
         '''
         projects = []
-        
-        for project in os.listdir(self._pathProject):
-            fullPath = os.path.join(self._pathProject, project)
+
+        for project in os.listdir(self.PROJECTS):
+            #We build the complete path to access the Project and we check if it's a dir or not, if yes then it's a Project according to our standards
+            fullPath = os.path.join(self.PROJECTS, project)
             if os.path.isdir(fullPath):
                 projects.append(project)
         return projects
+
+h = Hobbes()
+print h.getListProjects()
