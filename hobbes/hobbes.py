@@ -61,6 +61,9 @@ class Hobbes(object):
             fullPath = os.path.join(self.PROJECTS, project)
             if os.path.isdir(fullPath):
                 projects.append(project)
+        projects.sort()
+        print projects
+        print '_'*10
         return projects
 
     def loadFile(self, path):
