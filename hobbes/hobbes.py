@@ -39,6 +39,8 @@ class Hobbes(object):
         
         # self._pathProject = self.PROJECTS
         self.verbose = verbose
+        self._print('In Nuke : '+str(inNuke))
+        self._print('In Maya : '+str(inMaya))
     
     
     def _print(self, msg):
@@ -61,17 +63,24 @@ class Hobbes(object):
                 projects.append(project)
         return projects
 
-    def loadFile(self, file):
+    def loadFile(self, path):
         '''
             LoadFile : 
                 Will try to lad the file given in param.
         '''
         if inNuke:
             print 'yeah'
+            #nukescriptOpen(path of the script)
         elif inMaya:
-            self._print('Nope')
+            filePath = ''
         else:
             self._print('You must launch the tool from Nuke or Maya')
 
-h = Hobbes()
-h.loadFile()
+    def listFiles(self, path):
+        '''
+            List the files from a given path and returns them
+        '''
+        os.listdir()
+
+# h = Hobbes()
+# h.loadFile()
