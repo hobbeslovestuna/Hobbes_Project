@@ -34,6 +34,7 @@ class Hobbes(object):
     _3D         = '3D'
     RENDER      = 'RENDER'
     SHOTS       = 'SHOTS'
+    ASSETS       = 'ASSETS'
 
     def __init__(self, verbose = True):
         '''
@@ -111,30 +112,60 @@ class Hobbes(object):
         '''
             List the assests from a given path and returns them
         '''
-        listshots = []
+        listassets = []
         if inNuke:
             pathToProj = os.path.join(path, project)
-            pathToShots = os.path.join(pathToProj, self.SHOTS, self.COMP)
+            pathToShots = os.path.join(pathToProj, self.ASSETS)
             self._print(pathToShots)
             try:
-                listshots = os.listdir(pathToShots)
+                listassets = os.listdir(pathToShots)
             except:
                 self._print("Error retriving the project's shots")
         elif inMaya:
             pathToProj = os.path.join(path, project)
-            pathToShots = os.path.join(pathToProj, self.SHOTS, self._3D)
+            pathToShots = os.path.join(pathToProj, self.ASSETS)
             self._print(pathToShots)
             try:
-                listshots = os.listdir(pathToShots)
+                listassets = os.listdir(pathToShots)
             except:
                 self._print("Error retriving the project's shots")
 
-        return listshots
+        print listassets
+        print '---'
+        return listassets
 
-    def buildPath(self, rootPath=PROJECTS, endPath=''):
+    def listFiles(self, shots = False, assets = False, proj = None, types = None, selection = None):
         '''
-            Builds a path based on a root and an end to 
+            Returns a list of file based on a path given
         '''
-        pass
+        listFile = []
+        if inNuke:
+            pathToProj = os.path.join(self.PROJECTS, proj)
+            if shots:
+                pathToFiles = os.path.join(pathToProj, self.SHOTS, self.COMP, selection)
+                self._print(pathToFiles)
+            elif assets:
+                pathtoFiles = os.path.join(pathToProj, self.SHOTS, self._3D, selection)
+            listFile = os.listdir(pathToFiles)
+        
+        elif inMaya:
+            pathToProj = os.path.join(self.PROJECTS, proj)
+            if shots:
+                pathToFiles = os.path.join(pathToProj, self.SHOTS, self._3D, selection)
+            listFile = os.listdir(pathToFiles)
+
+        return listFile
+
+    def getPath(self, project, type, shot, file):
+        path = ''
+        if inNuke:
+            if type == 'Shots':
+                path = os.path.join(self.PROJECTS, project, self.SHOTS, self.COMP, shot, file)
+            elif type == 'Asset':
+                path = os.path.join(self.PROJECTS, project, self.ASSETS, shot, file)
+        elif inMaya:
+            if type == 'Shots':
+                path = os.path.join(self.PROJECTS, project, self.SHOTS, self._3D, shot, file)
+        return path
 # h = Hobbes()
 # h.loadFile()
