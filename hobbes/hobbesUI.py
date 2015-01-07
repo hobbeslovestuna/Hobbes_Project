@@ -29,15 +29,22 @@ class HobbesUI(QWidget):
     '''
         The HobbesUI to manage project both in nuke and Maya
     '''
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, verbose = True):
         if not inNuke:
             super(HobbesUI, self).__init__(parent)
         else:
             super(HobbesUI, self).__init__(parent)
-
-        self.hobbes = hobbes.Hobbes()
+        self.verbose = verbose
+        self.hobbes = hobbes.Hobbes()        
 
     
+    def _print(self, msg):
+        '''
+            Verbose for debug
+        '''
+        if self.verbose:
+            print msg
+
     def ui(self):
         '''
             The UI of the HPM
@@ -87,4 +94,6 @@ class HobbesUI(QWidget):
             selection = item.text()
 
         if selection == "Shots":
-            self.listSeq.addItems()
+            self._print'PROJECT : '+str(self.liste.currentText())
+            #self.hobbes.listShots(project = )
+            #self.listSeq.addItems()
