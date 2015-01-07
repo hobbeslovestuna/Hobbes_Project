@@ -28,9 +28,12 @@ class Hobbes(object):
     '''
         The Main class for loading assets, saving and versionning files
     '''
-    #PROJECTS
-    PROJECTS = _PATH_TO_PROJECT
-    
+    #PROJECTS -- Class Attributes to access directory structure
+    PROJECTS    = _PATH_TO_PROJECT
+    COMP        = 'COMP'
+    _3D         = '3D'
+    RENDER      = 'RENDER'
+
     def __init__(self, verbose = True):
         '''
             Init of the class.
@@ -79,11 +82,25 @@ class Hobbes(object):
         else:
             self._print('You must launch the tool from Nuke or Maya')
 
-    def listFiles(self, path):
+    def listShots(self, path = self.PROJECTS, project):
         '''
             List the files from a given path and returns them
         '''
-        os.listdir()
+        if inNuke:
+            pathToProj = os.path.join(path, project)
+            pathToShots = os.path.join(pathToShots, self.COMP)
+            self._print(pathToShots)
+        try:
+            listShots = os.listdir(pathToShots)
+        except:
+            self._print("Error retriving the project's shots")
 
+        return listShots
+
+    def buildPath(self, rootPath=self.PROJECTS, endPath):
+        '''
+            Builds a path based on a root and an end to 
+        '''
+        pass
 # h = Hobbes()
 # h.loadFile()
