@@ -16,7 +16,7 @@ try:
 except:
     inNuke = True
 import hobbes
-# reload(hobbes)
+reload(hobbes)
 
 ''''def getMayaWindow():
    
@@ -71,13 +71,13 @@ class HobbesUI(QWidget):
         self.listType   = QListWidget(parent = self)
         self.listType.addItems(['Shots', 'Asset'])
 
-        self.listSeq    = QListWidget(parent = self)
-        self.listShot   = QListWidget(parent = self)
+        self.listTwo     = QListWidget(parent = self)
+        self.listThree   = QListWidget(parent = self)
 
         self.layoutList = QHBoxLayout()
         self.layoutList.addWidget(self.listType)
-        self.layoutList.addWidget(self.listSeq)
-        self.layoutList.addWidget(self.listShot)
+        self.layoutList.addWidget(self.listTwo)
+        self.layoutList.addWidget(self.listThree)
 
 
         #ADDING VARIOUS LAYOUTS TO THE MAIN LAYOUT
@@ -85,15 +85,40 @@ class HobbesUI(QWidget):
         self.layoutMain.addLayout(self.layoutList)
 
         #CONNECTIONS
-        self.connect(self.listType, SIGNAL('itemSelectionChanged()'), self.typeSelected)
+        self.connect(self.liste, SIGNAL('currentIndexChanged(QString)'), self.updateProject)
+        self.connect(self.listType, SIGNAL('itemSelectionChanged()'), self.updateTwo)
+        self.connect(self.listTwo, SIGNAL('itemSelectionChanged()'), self.updateThree)
+        # self.liste.currentIndexChanged['QString'].connect(self.updateProject)
         self.show()
 
-    def typeSelected(self):
-
+    def updateTwo(self):
+        '''
+            Based on what is selected in listType, we update the second column
+        '''
         for item in self.listType.selectedItems():
             selection = item.text()
 
-        if selection == "Shots":
-            self._print'PROJECT : '+str(self.liste.currentText())
+        if selection == 'Shots':
+            self._print('PROJECT : '+str(self.liste.currentText()))
+            self.shots = self.hobbes.listShots(project = self.liste.currentText())
             #self.hobbes.listShots(project = )
-            #self.listSeq.addItems()
+            self.listTwo.addItems(self.shots)
+        elif selection == 'Asset':
+            self._print('PROJECT : '+str(self.liste.currentText()))
+            #self.assets = self.hobbes.listAssets()
+
+    def updateProject(self):
+        '''
+            Update the UI based on the project selected
+        '''
+        self.listTwo.clear()
+        self.listThree.clear()
+
+    def updateThree(self):
+        '''
+            Updates the third column of the UI
+        '''
+        self.listThree.clear()
+        for item in self.listTwo.selectedItems():
+            print item.text()
+        
