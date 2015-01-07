@@ -33,6 +33,7 @@ class Hobbes(object):
     COMP        = 'COMP'
     _3D         = '3D'
     RENDER      = 'RENDER'
+    SHOTS       = 'SHOTS'
 
     def __init__(self, verbose = True):
         '''
@@ -82,22 +83,55 @@ class Hobbes(object):
         else:
             self._print('You must launch the tool from Nuke or Maya')
 
-    def listShots(self, path = self.PROJECTS, project):
+    def listShots(self, path = PROJECTS, project = None ):
         '''
             List the files from a given path and returns them
         '''
+        listshots = []
         if inNuke:
             pathToProj = os.path.join(path, project)
-            pathToShots = os.path.join(pathToShots, self.COMP)
+            pathToShots = os.path.join(pathToProj, self.SHOTS, self.COMP)
             self._print(pathToShots)
-        try:
-            listShots = os.listdir(pathToShots)
-        except:
-            self._print("Error retriving the project's shots")
+            try:
+                listshots = os.listdir(pathToShots)
+            except:
+                self._print("Error retriving the project's shots")
+        elif inMaya:
+            pathToProj = os.path.join(path, project)
+            pathToShots = os.path.join(pathToProj, self.SHOTS, self._3D)
+            self._print(pathToShots)
+            try:
+                listshots = os.listdir(pathToShots)
+            except:
+                self._print("Error retriving the project's shots")
 
-        return listShots
+        return listshots
 
-    def buildPath(self, rootPath=self.PROJECTS, endPath):
+    def listAssets(self, path = PROJECTS, project = None):
+        '''
+            List the assests from a given path and returns them
+        '''
+        listshots = []
+        if inNuke:
+            pathToProj = os.path.join(path, project)
+            pathToShots = os.path.join(pathToProj, self.SHOTS, self.COMP)
+            self._print(pathToShots)
+            try:
+                listshots = os.listdir(pathToShots)
+            except:
+                self._print("Error retriving the project's shots")
+        elif inMaya:
+            pathToProj = os.path.join(path, project)
+            pathToShots = os.path.join(pathToProj, self.SHOTS, self._3D)
+            self._print(pathToShots)
+            try:
+                listshots = os.listdir(pathToShots)
+            except:
+                self._print("Error retriving the project's shots")
+
+        return listshots
+
+    def buildPath(self, rootPath=PROJECTS, endPath=''):
         '''
             Builds a path based on a root and an end to 
         '''
