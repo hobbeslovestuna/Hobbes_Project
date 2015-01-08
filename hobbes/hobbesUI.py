@@ -154,6 +154,7 @@ class HobbesUI(QWidget):
     def loadFile(self):
         '''
             Opens a nuke openNukeScript
+            TODO : If asset then Import rather than load it. OR ask if loads or import
         '''
         typ = self.listType.currentItem().text()#itemSelected()[0].text()
         shot = self.listTwo.currentItem().text()
@@ -165,3 +166,13 @@ class HobbesUI(QWidget):
         elif inMaya:
             print 'Opening : '+path
             cmds.file(path, o = True)
+
+    def saveFile(self):
+        '''
+            Save the file and ask if overwrite or increment
+        '''
+        if inNuke : 
+            filePath = nuke.Root()['name'].value()
+        elif inMaya:
+            filePath = cmds.file(q = True)
+
