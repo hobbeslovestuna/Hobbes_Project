@@ -5,6 +5,9 @@
     Author  : Victor
     Version : 0.1
     Date Last Modification : 05/01/2015
+
+    TODO : Save file to finish !
+           QListWidgetItem instead of strings done
 """
 
 from PySide.QtGui import *
@@ -48,12 +51,31 @@ class HobbesUI(QWidget):
         if self.verbose:
             print msg
 
+    def refresh(self):
+        '''
+            Refresh the UI whenever it's opened.
+            TODO : inMaya
+        '''
+        if inNuke:
+            fileName = nuke.Root()['name'].value()
+        elif inMaya:
+            fileName = cmds.file(q = True, list = True)[0]
+                        
+        if 'SHOTS' in fileName:
+            self.listType.setCurrentRow(0)
+        # self.listType.setCurrentItem('Shots')
+            self.updateTwo()
+            for shot in range(self.listTwo.count()):
+                shot_str = self.listTwo.item(shot).text()
+                if shot_str in fileName:
+                    shot = self.listTwo.item(shot)
+                    self.listTwo.setCurrentItem(shot)
     def ui(self):
         '''
             The UI of the HPM
             2 QBox and one
         '''
-
+        
         self.version    = '0.1'
         self.title      = 'Hobbes Project Manager '+self.version
 
@@ -102,9 +124,12 @@ class HobbesUI(QWidget):
         self.connect(self.listType, SIGNAL('itemSelectionChanged()'), self.updateTwo)
         self.connect(self.listTwo, SIGNAL('itemSelectionChanged()'), self.updateThree)
         self.connect(self.load_btn, SIGNAL('clicked()'), self.loadFile)
+        self.connect(self.save_btn, SIGNAL('clicked()'), self.saveFile)
         self.connect(self.close_btn, SIGNAL('clicked()'), self.close)
         # self.liste.currentIndexChanged['QString'].connect(self.updateProject)
         self.show()
+
+        self.refresh()
 
     def updateProject(self):
         '''
@@ -125,14 +150,19 @@ class HobbesUI(QWidget):
             selection = item.text()
 
         if selection == 'Shots':
+            #Retrieve the shots from the dir of the Project and adds them as QListWidgetItem
             self._print('PROJECT : '+str(self.liste.currentText()))
             self.shots = self.hobbes.listShots(project = self.liste.currentText())
-            #self.hobbes.listShots(project = )
-            self.listTwo.addItems(self.shots)
+            for shot in self.shots:
+                shot = QListWidgetItem(shot)
+                self.listTwo.addItem(shot)
+        
         elif selection == 'Asset':
             self._print('PROJECT : '+str(self.liste.currentText()))
             self.assets = self.hobbes.listAssets(project = self.liste.currentText())
-            self.listTwo.addItems(self.assets)
+            for asset in self.assets:
+                asset = QListWidgetItem(asset)
+                self.listTwo.addItem(asset)
     
     def updateThree(self):
         '''
@@ -162,7 +192,10 @@ class HobbesUI(QWidget):
         path = self.hobbes.getPath(self.liste.currentText(), typ, shot, fil)
         print path
         if inNuke:
-            nuke.scriptOpen(path)
+            try:
+                nuke.scriptOpen(path)
+            except:
+                print 'An error occured while opening the script'
         elif inMaya:
             print 'Opening : '+path
             cmds.file(path, o = True)
@@ -173,6 +206,18 @@ class HobbesUI(QWidget):
         '''
         if inNuke : 
             filePath = nuke.Root()['name'].value()
+            self._print(filePath)
         elif inMaya:
-            filePath = cmds.file(q = True)
+            filePath = cmds.file(q = True, list = True)[0]
 
+        version_box = QMessageBox()
+        version_box.setText('What kind of save would you like to do ?')
+        overwrite_btn = version_box.addButton('Overwrite', QMessageBox.ActionRole)
+        version_btn = version_box.addButton('Save new version', QMessageBox.ActionRole)
+        cancel_btn = version_box.addButton('Cancel', QMessageBox.NoRole)
+        version_box.exec_()
+
+        if version_box.clickedButton() == overwrite_btn:
+            self._print('OVERWRITE selected')
+        elif version_box.clickedButton() == version_btn:
+            self._print('Versionning selected')
