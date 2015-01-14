@@ -8,7 +8,7 @@
 """
 
 import os
-
+import re
 #Check if launched in Nuke or Maya
 try:
     import nuke
@@ -167,5 +167,14 @@ class Hobbes(object):
             if type == 'Shots':
                 path = os.path.join(self.PROJECTS, project, self.SHOTS, self._3D, shot, file)
         return path
+
+    def versionIt(self, path):
+        '''
+            A methods that returns a path with the new version of the file
+        '''
+        root, fileName = os.path.split(path)
+        if inNuke:
+            if not re.match('v[0-9]*', fileName):
+                self._print('Wrong file format')
 # h = Hobbes()
 # h.loadFile()
